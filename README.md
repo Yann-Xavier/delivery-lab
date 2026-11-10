@@ -90,3 +90,12 @@ Com um receptor sem deduplicação (sem chave primária e sem `ON CONFLICT`), qu
 - **Sem autenticação.** O receptor aceita qualquer requisição.
 - **Conflito é decisão de projeto.** O receptor mantém o primeiro payload e recusa o segundo. Em um sistema real, `409` costuma pedir investigação, e este laboratório não trata disso.
 - **SQLite local e dados sintéticos.** O laboratório mostra a lógica, não o desempenho.
+
+## Dados e privacidade
+
+- Use apenas dados sintéticos. O laboratório não foi feito para receber dados reais de clientes.
+- O receptor grava `id`, payload e hash de cada evento no arquivo indicado por `RECEIVER_DB`. O emissor grava eventos, entregas e tentativas no banco passado a `initialize()`. Não há retenção nem exclusão automática: para apagar os dados, remova os arquivos.
+- `demo.py` cria os bancos em uma pasta temporária (`delivery-lab-*`), mostra o caminho no final e não a apaga.
+- O proxy registra apenas o caminho da requisição e o status descartado, nunca o corpo. O receptor não registra payloads em log.
+- O receptor não tem autenticação. Não o exponha fora da máquina local.
+- Os arquivos `*.sqlite3` estão no `.gitignore`, para que bancos locais não sejam versionados.
